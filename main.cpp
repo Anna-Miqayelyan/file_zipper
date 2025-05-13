@@ -5,6 +5,10 @@ int main(){
     string compressed="compressed.hzip";
     string decompressed= "output.txt";
 
+    compressFile(input,compressed);
+    decompressFile(compressed,decompressed);
+
+    return 0;
 
 
 }
