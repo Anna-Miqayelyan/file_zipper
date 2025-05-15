@@ -6,9 +6,6 @@
 #include <bitset>
 
 
-using namespace std;
-
-
 struct Node {
     char ch;
     int freq;
@@ -24,7 +21,7 @@ struct Compare {
     }
 };
 
-void HuffmanTree(Node* root , string str, unordered_map<char,string>& table){
+void HuffmanTree(Node* root , std::string str, std::unordered_map<char,std::string>& table){
     if(!root) 
     return;
     if(!root->left && !root->right) {
@@ -36,12 +33,12 @@ void HuffmanTree(Node* root , string str, unordered_map<char,string>& table){
 
 }
 
-void compressFile(string& inputPath,string &outputPath){
-    ifstream in(inputPath);
-    ofstream out(outputPath);
+void compressFile(const std::string& inputPath,const std::string& outputPath){
+    std::ifstream in(inputPath);
+   std:: ofstream out(outputPath,std::ios::binary);
 
-    unordered_map<char,int> freq;
-    string text;
+   std:: unordered_map<char,int> freq;
+   std:: string text;
 
 
 
@@ -51,7 +48,7 @@ void compressFile(string& inputPath,string &outputPath){
         text+=ch;
         freq[ch]++;
     }
-    priority_queue<Node* ,vector<Node*>,Compare> pq;
+   std:: priority_queue<Node* ,std::vector<Node*>,Compare> pq;
     for(auto& pair : freq){
         pq.push(new Node(pair.first,pair.second));
     }
@@ -70,7 +67,7 @@ void compressFile(string& inputPath,string &outputPath){
     Node* root=pq.top();
 
 
-    unordered_map<char,string> table;
+    std::unordered_map<char,std::string> table;
     HuffmanTree(root,"",table);
    
 
@@ -79,29 +76,36 @@ void compressFile(string& inputPath,string &outputPath){
     for (auto& pair : freq) {
         out << (int)pair.first << ' ' << pair.second << '\n'; 
     }
-    string encodedTect;
+   std:: string encodedTect;
     for(char c :text){
         encodedTect+=table[c];
     }
-    while (encodedTect.size()%8!=0)
-             encodedTect+="0";
+    while (encodedTect.size() % 8 !=0)  {
+         encodedTect += "0";
+        }
+    
+        size_t paddingBits = (8 - encodedTect.size() % 8) % 8;
+       out.write(reinterpret_cast<const char*>(&paddingBits), sizeof(size_t));
 
-             for (size_t i = 0; i < encodedTect.size(); i += 8) {
-                bitset<8> bits(encodedTect.substr(i, 8));  
+
+    for (size_t i = 0; i < encodedTect.size(); i += 8) {
+                std::bitset<8> bits(encodedTect.substr(i, 8));  
                 char byte = (char)bits.to_ulong();
                 out.write(&byte, 1);
             }
+
+
             in.close(); out.close(); 
-            cout << "File compressed to: " << outputPath << endl;
+           std:: cout << "File compressed to: " << outputPath <<std:: endl;
 }
-void decompressFile(string& inputPath, string& outputPath){
-    ifstream in(inputPath, ios::binary);
-    ofstream out(outputPath);
+void decompressFile(const std::string& inputPath, const std::string& outputPath){
+    std::ifstream in(inputPath, std::ios::binary);
+    std::ofstream out(outputPath);
 
     int numChars;
 
     in>>numChars;
-    unordered_map<char,int> freq;
+   std:: unordered_map<char,int> freq;
 
 
 
@@ -112,7 +116,7 @@ void decompressFile(string& inputPath, string& outputPath){
 
     }
     in.get();
-    priority_queue<Node*, vector<Node*>, Compare> pq;
+    std::priority_queue<Node*,std:: vector<Node*>, Compare> pq;
     for (auto& pair : freq) {
         pq.push(new Node(pair.first, pair.second));
     }
@@ -130,13 +134,13 @@ void decompressFile(string& inputPath, string& outputPath){
 
 
 
-    string encodedText;
+    std::string encodedText;
     char byte;
     while (in.read(&byte, 1)) {
-        bitset<8> bits(byte);
+       std:: bitset<8> bits(byte);
         encodedText += bits.to_string();  
 
-
+    }
         Node* node = root;
         for (char bit : encodedText) {
             node = (bit == '0') ? node->left : node->right;
@@ -146,7 +150,7 @@ void decompressFile(string& inputPath, string& outputPath){
             }
         }
     
-    }
+    
 
 
 

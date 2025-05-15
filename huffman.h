@@ -1,12 +1,12 @@
 #ifndef HUFFMAN_H
 #define HUFFMAN_H
 
-using namespace std;
+
 
 #include <string>
 
-void compressFile(string& inputPath,string& outputPath);
-void decompressFile(string& inputPath,string outputPath);
+void compressFile(const std::string& inputPath, const std::string& outputPath);
+void decompressFile( const std::string& inputPath, const std::string& outputPath);
 
 
 #endif

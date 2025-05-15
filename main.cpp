@@ -1,9 +1,9 @@
 #include "huffman.h"
-using namespace std;
+#include <string>
 int main(){
-    string input = "text.txt";
-    string compressed="compressed.hzip";
-    string decompressed= "output.txt";
+    std::string input = "text.txt";
+    std::string compressed="compressed.hzip";
+    std:: string decompressed= "output.txt";
 
     compressFile(input,compressed);
     decompressFile(compressed,decompressed);
